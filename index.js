@@ -1,30 +1,25 @@
 let i=0;
-function Print(n, arguments, func){
+const Print=(n, arguments, func)=>{
     console.log(`${n}. ${func.name}(${arguments}) -> ${func(arguments)}`)
 }
 
 
 //____________(1)_______________________________________________________________________________________________________
 function countTrue(array){
-    let count=0;
-    for(let i of array)
-    {
-        if(i===true){count++;}
-    }
-    return count;
+    return array.filter(array => array===true).length;
 }
-Print(++i, [false, true,false], countTrue);
+Print(++i, [false, true,false, true], countTrue);
 
 
 //____________(2)_______________________________________________________________________________________________________
 function jazzify(array){
-    let tempArray= [];
-    for(let i of array){
-        if(i[i.length-1]!=="7")
-            tempArray.push(i+"7");
-        else
-            tempArray.push(i);
-    }
+    let tempArray=array.map(
+        item=>{
+            let number="7";
+            if(item.slice(-1)===number)return item;
+            return item+number;
+        }
+    );
     return tempArray;
 }
 Print(++i, ["Dm", "G7", "E", "A"], jazzify);
@@ -32,42 +27,32 @@ Print(++i, ["Dm", "G7", "E", "A"], jazzify);
 //____________(3)_______________________________________________________________________________________________________
 function sortDescending(num){
     if(typeof num ==='number' && (num>0)){
-        let firstNum=num;
-        let tempArray=[];
-        for(let i of num.toString()){
-            tempArray.push(Number(i));
-        }
-        tempArray.sort();
-        num=0;
-        let n=0;
-        for(let i of tempArray)
-            num += i * Math.pow(10, n++);
-
-        return `(${firstNum}) -> ${num}`;
+        //num.toString().split("").map(item=>Number(item)).sort((a, b)=>b-a).map(item=>item.toString()).join('')
+        //Мені стало кумедно, що це все можна зробити одним рядком, проте мені здається для підвищення читабельності
+        //варто розбити по блоках
+        num=num.toString().split("").map(item=>Number(item));
+        num=num.sort((a, b)=>b-a).map(item=>item.toString());
+        return num.join('');
     }
+    return NaN;
 }
 Print(++i, 1254859723, sortDescending);
 
 //____________(4)_______________________________________________________________________________________________________
 function sortByLength(array){
-    return `(${array}) -> ${array.sort(function(a, b){return a.length - b.length;})}`;
+    return `(${array}) -> ${array.sort((a,b)=> a.length - b.length)}`;
 }
 Print(++i, ["Leonardo", "Michelangelo", "Raphael", "Donatello"], sortByLength);
 
 //____________(5)_______________________________________________________________________________________________________
 function minMax(array){
-    let min=Math.min(...array), max=Math.max(...array);
-    return [min, max];
+    return [Math.min(...array), Math.max(...array)];
 }
 Print(++i, [1, 2, 3, 4, 5], minMax);
 
 //_____________(6)______________________________________________________________________________________________________
 function findLargestNums(array){
-    let tempArray=[];
-    for(let i of array){
-        tempArray.push(Math.max(...i));
-    }
-    return tempArray;
+    return array.map(item=>Math.max(...item));
 }
 Print(++i, [[4, 2, 7, 1], [20, 70, 40, 90], [1, 2, 0]], findLargestNums);
 
@@ -75,61 +60,58 @@ Print(++i, [[4, 2, 7, 1], [20, 70, 40, 90], [1, 2, 0]], findLargestNums);
 class Calculator{
     constructor() {}
     check(a, b){
-        if(typeof a === 'number' && typeof b==='number'){
-            return true;
-        }
-        else false;
+        return typeof a === 'number' && typeof b==='number';
     }
+    //щодо попереднього, то я зрозумів, що все таки код не варто писати пізно в ночі)))
 
     add(a, b){
         if(this.check(a, b)){
             return a+b;
         }
-        else return NaN;
+        return NaN;
     }
     subtract(a, b){
         if(this.check(a, b)){
             return a-b;
         }
-        else return NaN;
+        return NaN;
     }
     multiply(a, b){
         if(this.check(a, b)){
             return a*b;
         }
-        else return NaN;
+        return NaN;
     }
     divide(a, b){
         if(this.check(a, b)&& b!==0){
             return a/b;
         }
-        else return NaN;
+        return NaN;
     }
 }
 let calculator = new Calculator()
-console.log(`${++i}. ${calculator.multiply.name}(5,10) -> ${calculator.multiply(5, 10)}`)
+console.log(
+    `${++i}. ${calculator.multiply.name}(5,10) -> ${calculator.multiply(5, 10)}`
+)
 
 //_____________(8)______________________________________________________________________________________________________
 function keysAndValues(array){
-    let keys = Object.keys(array),
-        values = keys.map(function (key) {
-            return array[key];
-        });
-
-    return [keys, values];
+    return [Object.keys(array), Object.values(array)];
 }
 Print(++i, { key1: true, key2: false, key3: undefined }, keysAndValues);
 
 //_____________(9)______________________________________________________________________________________________________
 function ascDesNone(array, mode){
-    if (mode!=="None"){
-        let modeFunc;
-        if(mode==="Asc") modeFunc=function(a, b){return a - b;}
-        else if(mode==="Des") modeFunc=function(a, b){return  b - a;}
-        else return NaN;
-        return array.sort(modeFunc);
+    switch (mode) {
+        case "Asc":
+            return array.sort((a, b)=> a - b);
+        case "Des":
+            return array.sort((a, b)=> b - a);
+        case "None":
+            return array.sort();
+        default:
+            return NaN;
     }
-    return array.sort();
 }
 console.log(`${++i}. ${ascDesNone.name}([4, 3, 2, 1], "Asc") -> ${ascDesNone([4, 3, 2, 1], "Asc")}`)
 
@@ -142,25 +124,18 @@ function sortIt(arr) {
         return num1 - num2;
     });
 }
-
-Print(++i, [4, 1, 3], sortIt);
+console.log(`${++i}. sortIt([4, [56], 1, 3])->`);
+console.log(...sortIt([4, [56], 1, 3]));
+//тут я не знаю як це можна автоматизувати як string, щоб код нормально виглядав і принципі не було якось кастильно
 //_____________(11)_____________________________________________________________________________________________________
 function hasHiddenFee(arrayOfPrices, total){
-    let array=[];
-    for(let i of arrayOfPrices){
-        let price="";
-        for(let j of i) if(j!=="$")  price+=j;
-        array.push(Number(price));
-    }
-    let totalPrice="";
-    for(let j of total) if(j!=="$")  totalPrice+=j;
-
-    if(array.reduce((previousValue, currentValue) => previousValue + currentValue, null)<Number(totalPrice)) return true;
-    else return false;
+    arrayOfPrices=arrayOfPrices.map(item=>Number(item.slice(1)));
+    total=Number(total.slice(1));
+    return arrayOfPrices.reduce((previousValue, currentValue) => previousValue + currentValue, null) < Number(total);
+    //щодо reduce я справді скопіпастив, проте для себе все таки розібрався як він працює
 }
-hasHiddenFee(["$1", "$2", "$3"], "$6")
-console.log(`${++i}. ${hasHiddenFee.name}(["$1", "$2", "$3"], "$6") -> ${hasHiddenFee(["$1", "$2", "$3"], "$6")}`)
 
+console.log(`${++i}. ${hasHiddenFee.name}(["$1", "$2", "$3"], "$6") -> ${hasHiddenFee(["$1", "$2", "$3"], "$6")}`)
 
 //_____________(12)_____________________________________________________________________________________________________
 function trace(array){
@@ -173,10 +148,8 @@ Print(++i, [[1, 4],[4, 1]],trace);
 
 //_____________(13)_____________________________________________________________________________________________________
 function removeSpecialCharacters(str){
-    let stringToReplace= str.replace(/[!@#$%^&*()|.\\]/gi, '');
-    return stringToReplace;
+    return  str.replace(/[!@#$%^&*()|.\\]/gi, '');
 }
-
 Print(++i, "%fd76$fd(-)6GvKlO.", removeSpecialCharacters);
 
 
@@ -192,7 +165,7 @@ function pentagonal(n){
     if(n>0){
         return (5*Math.pow(n, 2)-5*n+2)/2;
     }
-    else return NaN;
+    return NaN;
 }
 Print(++i,8, pentagonal);
 
@@ -207,8 +180,9 @@ Print(++i, 300.4, tempConversion);
 
 //_____________(17)_____________________________________________________________________________________________________
 function missingLetter(str) {
-    let i, j = 0, m = 122;
-    if (str) {
+    if (typeof str==="string") {
+        let i, j = 0;
+        const m = 122;
         i = str.charCodeAt(0);
         while (i <= m && j < str.length) {
             if (String.fromCharCode(i) !== str.charAt(j)) {
@@ -217,7 +191,8 @@ function missingLetter(str) {
             i++;
             j++;
         }
+        return "No Missing Letter";
     }
-    return "No Missing Letter";
+    return "The passed argument is not a string!";
 }
-Print(++i, "tuvxyz",missingLetter);
+Print(++i, "ghijklmno",  missingLetter);
