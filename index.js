@@ -97,10 +97,9 @@ Print(++i, { key1: true, key2: false, key3: undefined }, keysAndValues);
 //_____________(9)______________________________________________________________________________________________________
 function ascDesNone(array, mode){
     switch (mode) {
-        case "Asc":
-            return array.sort((a, b)=> a - b);
         case "Des":
             return array.sort((a, b)=> b - a);
+        case "Asc":
         case "None":
             return array.sort();
         default:
