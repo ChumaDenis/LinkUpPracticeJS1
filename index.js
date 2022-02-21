@@ -13,13 +13,7 @@ Print(++i, [false, true,false, true], countTrue);
 
 //____________(2)_______________________________________________________________________________________________________
 function jazzify(array){
-    let tempArray=array.map(
-        item=>{
-            let number="7";
-            if(item.slice(-1)===number)return item;
-            return item+number;
-        }
-    );
+    let tempArray = array.map(item => (item.slice(-1) === '7' ? item : `${item}7`));
     return tempArray;
 }
 Print(++i, ["Dm", "G7", "E", "A"], jazzify);
